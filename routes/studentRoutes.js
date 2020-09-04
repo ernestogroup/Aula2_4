@@ -1,9 +1,9 @@
-import express from 'express';
-import { studentModel } from '../models/student.js';
+import express from "express";
+import { studentModel } from "../models/student.js";
 
 const app = express();
 
-app.get('/student', async (req, res) => {
+app.get("/student", async (req, res) => {
   const student = await studentModel.find({});
 
   try {
@@ -13,7 +13,7 @@ app.get('/student', async (req, res) => {
   }
 });
 
-app.post('/student', async (req, res) => {
+app.post("/student", async (req, res) => {
   const student = new studentModel(req.body);
 
   try {
@@ -24,12 +24,12 @@ app.post('/student', async (req, res) => {
   }
 });
 
-app.delete('/student/:id', async (req, res) => {
+app.delete("/student/:id", async (req, res) => {
   try {
     const student = await studentModel.findOneAndDelete(req.params.id);
 
     if (!student) {
-      res.status(404).send('Documento nao encontrado');
+      res.status(404).send("Documento nao encontrado");
     }
 
     res.status(200).send();
@@ -38,7 +38,21 @@ app.delete('/student/:id', async (req, res) => {
   }
 });
 
-app.patch('/student/:id', async (req, res) => {
+app.patch("/student/:id", async (req, res) => {
+  try {
+    const student = await studentModel.findOneAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+
+    res.send(student);
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
+
+app.put("/student/:id", async (req, res) => {
   try {
     const student = await studentModel.findOneAndUpdate(
       req.params.id,
